@@ -1,4 +1,4 @@
-"""잔디(기여도) 레벨 0~8에 따라 보리밭이 익어가는 픽셀 애니메이션 GIF 생성기.
+﻿"""잔디(기여도) 레벨 0~8에 따라 보리밭이 익어가는 픽셀 애니메이션 GIF 생성기.
 - 배경 투명 (낮/밤 배경을 따로 깔 수 있게)
 - 레벨 0: 바람 없는 초록 밭, 이삭 없음
 - 레벨 1~8: 줄기마다 알맹이 1~8개, 색은 초록→황금, 바람도 점점 세짐
@@ -6,7 +6,7 @@
 import math, random, os, sys
 from PIL import Image
 
-W, H = 64, 40
+W, H = 208, 40
 SCALE = 4
 FRAMES = 60
 FPS = 30
@@ -28,7 +28,8 @@ AWN_GOLD = (255, 228, 160)
 # 줄기 배치: (x, 높이, 깊이 0=뒤 1=앞, 위상)
 rnd = random.Random(3)
 STALKS = []
-for row, (n, hmin, hmax, depth) in enumerate(((9, 20, 26, 0), (8, 25, 32, 1))):
+for row, (n, hmin, hmax, depth) in enumerate(((9, 14, 19, 0), (8, 18, 24, 1))):
+    n = int(n * W / 64)
     for i in range(n):
         x = int((i + 0.5 + rnd.uniform(-0.25, 0.25)) * W / n)
         STALKS.append((x, rnd.randint(hmin, hmax), depth, rnd.uniform(0, 2 * math.pi)))
@@ -94,7 +95,7 @@ def draw_frame(level, f):
         draw_stalk(px, level, t, x0, h, depth, phase)
     # 높은 레벨: 날리는 낟알
     prnd = random.Random(level * 13 + 1)
-    for i in range(max(0, level - 3) * 2):
+    for i in range(max(0, level - 3) * 6):
         sx, sy = prnd.randrange(W), prnd.randrange(2, 20)
         put(px, int(sx + t * W) % W, int(sy + 2 * math.sin(t * 2 * math.pi + i)), (255, 236, 170))
     return img.resize((W * SCALE, H * SCALE), Image.NEAREST)
@@ -130,3 +131,5 @@ if __name__ == "__main__":
             tile.alpha_composite(draw_frame(level, 10).resize((cw, ch), Image.NEAREST))
             sheet.paste(tile, (level * cw, row * ch))
     sheet.save("preview_sheet.png")
+
+

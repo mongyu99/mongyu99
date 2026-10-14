@@ -1,6 +1,6 @@
 <!-- 프로필 README에 넣을 부분 -->
 <p align="center">
-  <img src="./barley.gif" width="512" alt="오늘의 보리밭" style="image-rendering: pixelated;" />
+  <img src="./barley.gif" alt="이번 주 보리밭" />
 </p>
 
 <!--

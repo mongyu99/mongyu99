@@ -15,7 +15,8 @@ SKIES = {
 }
 
 def sky_frame(name, f):
-    top, low, orb, (ox, oy), nstars, cloud, hill, _, _ = SKIES[name]
+    top, low, orb, (ox0, oy), nstars, cloud, hill, _, _ = SKIES[name]
+    ox = ox0 * W // 64
     img = Image.new("RGBA", (W, H))
     px = img.load()
     t = f / FRAMES
@@ -25,7 +26,7 @@ def sky_frame(name, f):
         for x in range(W):
             px[x, y] = c + (255,)
     srnd = random.Random(5)
-    for i in range(nstars):
+    for i in range(nstars * 3):
         sx, sy = srnd.randrange(W), srnd.randrange(0, 22)
         tw = math.sin(2 * math.pi * (t * srnd.choice((1, 2)) + srnd.random()))
         if tw > -0.3:
@@ -41,7 +42,7 @@ def sky_frame(name, f):
             for x in range(ox - 3, ox + 4):
                 if 0 <= x < W and 0 <= y < H and (x - ox - 1) ** 2 + (y - oy + 1) ** 2 <= 5:
                     px[x, y] = lerp(top, low, y / (H - 1)) + (255,)
-    for cx0, cy, ln in ((6, 12, 12), (38, 6, 9), (24, 18, 7)):
+    for cx0, cy, ln in ((6, 12, 12), (38, 6, 9), (24, 18, 7), (90, 10, 14), (130, 5, 10), (170, 15, 12)):
         cx = int(cx0 + t * W) % (W + 16) - 16
         for x in range(cx, cx + ln):
             if 0 <= x < W:
@@ -92,4 +93,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
