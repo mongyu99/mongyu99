@@ -8,7 +8,7 @@ from PIL import Image
 
 W, H = 208, 40
 SCALE = 4
-FRAMES = 60
+FRAMES = 150   # 5초 루프: 느긋한 바람
 FPS = 30
 
 def lerp(a, b, t):
@@ -48,7 +48,7 @@ def draw_stalk(px, level, t, x0, height, depth, phase):
     shade_c = d(lerp(SHADE_GREEN, SHADE_GOLD, ripe))
     awn_c = d(lerp(AWN_GREEN, AWN_GOLD, ripe))
 
-    wind_amp = 0 if level == 0 else 1.0 + ripe * 2.5   # 레벨 0은 무풍
+    wind_amp = 0 if level == 0 else 0.8 + ripe * 1.4   # 레벨 0은 무풍
     wind = math.sin(2 * math.pi * t + phase * 0.4 + x0 / 10) * wind_amp
     droop = ripe * 4                                    # 익을수록 고개 숙임
 
@@ -97,7 +97,7 @@ def draw_frame(level, f):
     prnd = random.Random(level * 13 + 1)
     for i in range(max(0, level - 3) * 6):
         sx, sy = prnd.randrange(W), prnd.randrange(2, 20)
-        put(px, int(sx + t * W) % W, int(sy + 2 * math.sin(t * 2 * math.pi + i)), (255, 236, 170))
+        put(px, sx + round(3 * math.sin(t * 2 * math.pi + i)), sy + round(2 * math.cos(t * 2 * math.pi + i * 1.7)), (255, 236, 170))
     return img.resize((W * SCALE, H * SCALE), Image.NEAREST)
 
 def save_gif(frames, path):
@@ -131,5 +131,6 @@ if __name__ == "__main__":
             tile.alpha_composite(draw_frame(level, 10).resize((cw, ch), Image.NEAREST))
             sheet.paste(tile, (level * cw, row * ch))
     sheet.save("preview_sheet.png")
+
 
 

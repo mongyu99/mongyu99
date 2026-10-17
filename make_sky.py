@@ -43,7 +43,7 @@ def sky_frame(name, f):
                 if 0 <= x < W and 0 <= y < H and (x - ox - 1) ** 2 + (y - oy + 1) ** 2 <= 5:
                     px[x, y] = lerp(top, low, y / (H - 1)) + (255,)
     for cx0, cy, ln in ((6, 12, 12), (38, 6, 9), (24, 18, 7), (90, 10, 14), (130, 5, 10), (170, 15, 12)):
-        cx = int(cx0 + t * W) % (W + 16) - 16
+        cx = cx0 + round(4 * math.sin(2 * math.pi * t + cx0))   # 구름은 살짝만 흔들림
         for x in range(cx, cx + ln):
             if 0 <= x < W:
                 px[x, cy] = cloud + (255,)
@@ -93,5 +93,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
