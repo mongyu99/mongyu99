@@ -2,14 +2,18 @@ name: Barley field
 
 on:
   schedule:
-    - cron: "5 * * * *"   # 매시 5분 (GitHub 사정에 따라 몇 분~수십 분 늦을 수 있음)
-  workflow_dispatch:       # Actions 탭에서 수동 실행
+    - cron: "5 * * * *"
+  workflow_dispatch:
   push:
     branches: [main]
     paths-ignore: [barley.gif, stats.svg]
 
 permissions:
   contents: write
+
+concurrency:
+  group: barley
+  cancel-in-progress: true
 
 jobs:
   grow:
@@ -29,5 +33,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add barley.gif stats.svg
-          git diff --cached --quiet || git commit -m "🌾 update barley field"
+          git diff --cached --quiet && exit 0
+          git commit -m "🌾 update barley field"
+          git pull --rebase -X theirs origin main
           git push
